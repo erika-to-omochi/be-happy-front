@@ -7,6 +7,7 @@ import Image from 'next/image';
 const Step1 = () => {
   const [memory, setMemory] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isBoxClosed, setIsBoxClosed] = useState(false);
 
   const handleInputChange = (e) => {
     setMemory(e.target.value);
@@ -14,6 +15,7 @@ const Step1 = () => {
 
   const handleSubmit = async () => {
     setIsSubmitted(true);
+    setIsBoxClosed(false);
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/memories`, {
@@ -36,30 +38,86 @@ const Step1 = () => {
     }
 
     setTimeout(() => {
-      setIsSubmitted(false);
-      setMemory('');
-    }, 3000);
+      setIsBoxClosed(true);
+    }, 2500); // アニメーション完了後の待機時間を設定
+  };
+
+  const handleContinue = () => {
+    setIsSubmitted(false);
+    setMemory('');
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">STEP 1</h1>
 
-      <div className="flex justify-center">
-        <Image
-          src="/2.png"
-          alt="Chamomile"
-          width={320} // sm:w-80 に対応
-          height={320}
-          className="object-cover rounded-lg shadow-lg"
-          priority={true}
-        />
+      {/* 画像とアニメーションが表示される領域 */}
+      <div className="relative flex justify-center w-full max-w-md">
+        {/* isSubmittedがtrueのときはsrc="/2.png"を非表示にし、箱のアニメーションを表示 */}
+        {!isSubmitted ? (
+          <Image
+            src="/2.png"
+            alt="Chamomile"
+            width={320}
+            height={320}
+            className="object-cover rounded-lg shadow-lg"
+            priority={true}
+          />
+        ) : (
+          <div className="relative w-full h-[320px] flex items-center justify-center">
+            {/* テキストが左上から箱に向かって縮小して入るアニメーション */}
+            <motion.div
+              initial={{ opacity: 1, scale: 2, x: -100, y: -100 }}
+              animate={{ opacity: 0, scale: 0.1, x: 150, y: 150 }}
+              transition={{ duration: 1.5 }}
+              className="text-2xl sm:text-3xl font-bold text-center"
+              style={{ position: 'absolute', left: 0, top: 0 }}
+            >
+              {memory}
+            </motion.div>
+
+            {/* 箱の画像 */}
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{ scale: 1 }}
+              className="absolute top-1/2 left-[25%] transform -translate-x-1/2 -translate-y-1/2"
+            >
+              <Image
+                src="/box1.png"
+                alt="開いた箱"
+                width={256}
+                height={256}
+                className="mx-auto"
+              />
+            </motion.div>
+
+            {/* 箱の蓋が閉まるアニメーション */}
+            <motion.div
+              initial={{ y: -70 }}
+              animate={{ y: -25 }}
+              transition={{ delay: 1.5, duration: 1 }}
+              className="absolute top-1/2 left-[25%] transform -translate-x-1/2 -translate-y-1/2"
+            >
+              <Image
+                src="/box2.png"
+                alt="蓋"
+                width={256}
+                height={256}
+                className="mx-auto"
+              />
+            </motion.div>
+          </div>
+        )}
       </div>
 
-      <p className="text-center text-base sm:text-lg max-w-md mb-4 sm:mb-6">
-        あなたが整理したい記憶を教えてください。
-      </p>
+      {/* isSubmittedがfalseのときだけメッセージを表示 */}
+      {!isSubmitted && (
+        <p className="text-center text-base sm:text-lg max-w-md mb-4 sm:mb-6">
+          あなたが整理したい記憶を教えてください。
+        </p>
+      )}
 
+      {/* テキストエリアと送信ボタン */}
       {!isSubmitted && (
         <div className="relative w-full max-w-md">
           <textarea
@@ -82,45 +140,24 @@ const Step1 = () => {
         </button>
       )}
 
-      {/* 箱のアニメーション */}
-      {isSubmitted && (
-        <div className="relative mt-6 text-center">
-          {/* テキストが箱に縮小して入るアニメーション */}
-          <motion.div
-            initial={{ opacity: 1, scale: 1 }}
-            animate={{ opacity: 0, scale: 0.1, y: 50 }}
-            transition={{ duration: 1 }}
-            className="text-lg mb-4 sm:mb-8"
+      {/* 蓋が閉まった後のメッセージとボタン */}
+      {isSubmitted && isBoxClosed && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="mt-4 text-center"
+        >
+          <p className="text-base sm:text-lg mb-4">
+            嫌な記憶が勝手に出てこないように蓋をしました。
+          </p>
+          <button
+            onClick={handleContinue}
+            className="bg-[#D5CEC6] hover:bg-[#C0B8AE] text-gray-700 font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full transition-all duration-200"
           >
-            {memory}
-          </motion.div>
-
-          {/* 箱の画像 */}
-          <motion.div initial={{ scale: 1 }} animate={{ scale: 1 }}>
-            <Image
-              src="/box1.png"
-              alt="開いた箱"
-              width={192} // sm:w-48 に対応
-              height={192}
-              className="mx-auto"
-            />
-          </motion.div>
-
-          {/* 箱の蓋が閉まるアニメーション */}
-          <motion.div
-            initial={{ y: -230}}
-            animate={{ y: -150 }}
-            transition={{ delay: 1.5, duration: 1 }}
-          >
-            <Image
-              src="/box2.png"
-              alt="蓋"
-              width={192} // sm:w-48 に対応
-              height={192}
-              className="mx-auto absolute top-0"
-            />
-          </motion.div>
-        </div>
+            続ける
+          </button>
+        </motion.div>
       )}
     </div>
   );

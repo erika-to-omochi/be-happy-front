@@ -98,7 +98,7 @@ const Step1 = () => {
           {/* 箱の画像 */}
           <motion.div initial={{ scale: 1 }} animate={{ scale: 1 }}>
             <Image
-              src="/box3.png"
+              src="/box1.png"
               alt="開いた箱"
               width={192} // sm:w-48 に対応
               height={192}
@@ -113,7 +113,7 @@ const Step1 = () => {
             transition={{ delay: 1.5, duration: 1 }}
           >
             <Image
-              src="/box4.png"
+              src="/box2.png"
               alt="蓋"
               width={192} // sm:w-48 に対応
               height={192}

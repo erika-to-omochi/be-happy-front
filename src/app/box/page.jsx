@@ -68,7 +68,7 @@ const Step1 = () => {
             {/* テキストが左上から箱に向かって縮小して入るアニメーション */}
             <motion.div
               initial={{ opacity: 1, scale: 2, x: -100, y: -100 }}
-              animate={{ opacity: 0, scale: 0.1, x: 150, y: 150 }}
+              animate={{ opacity: 0, scale: 0.1, x: 150, y: 200 }}
               transition={{ duration: 1.5 }}
               className="text-2xl sm:text-3xl font-bold text-center"
               style={{ position: 'absolute', left: 0, top: 0 }}

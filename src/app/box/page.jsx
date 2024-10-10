@@ -80,7 +80,7 @@ const Step1 = () => {
             <motion.div
               initial={{ scale: 1 }}
               animate={{ scale: 1 }}
-              className="absolute top-1/2 left-[25%] transform -translate-x-1/2 -translate-y-1/2"
+              className="absolute top-[40%] left-[25%] transform -translate-x-1/2 -translate-y-[20%]" // 修正箇所
             >
               <Image
                 src="/box1.png"
@@ -96,7 +96,7 @@ const Step1 = () => {
               initial={{ y: -70 }}
               animate={{ y: -25 }}
               transition={{ delay: 1.5, duration: 1 }}
-              className="absolute top-1/2 left-[25%] transform -translate-x-1/2 -translate-y-1/2"
+              className="absolute top-[40%] left-[25%] transform -translate-x-1/2 -translate-y-[20%]" // 修正箇所
             >
               <Image
                 src="/box2.png"

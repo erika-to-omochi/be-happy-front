@@ -3,7 +3,7 @@ name: Trigger Parent Repository
 on:
   push:
     branches:
-      - main  # トリガーするブランチを指定
+      - main
 
 jobs:
   trigger:

@@ -88,8 +88,8 @@ const Step1 = () => {
           <Image
             src="/2.png"
             alt="Chamomile"
-            width={320}
-            height={320}
+            width={400}
+            height={400}
             className="object-cover rounded-lg shadow-lg"
             priority={true}
           />

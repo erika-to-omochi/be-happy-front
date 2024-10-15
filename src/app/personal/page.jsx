@@ -96,7 +96,7 @@ const IndexPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold mt-8">箱に入っている記憶一覧</h1>
+      <h1 className="text-4xl font-bold mt-24">箱に入っている記憶一覧</h1>
       {memories.length === 0 ? (
         <p className="text-lg">記憶がまだありません。</p>
       ) : (

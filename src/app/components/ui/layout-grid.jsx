@@ -1,5 +1,3 @@
-// front/src/app/components/ui/layout-grid.jsx
-
 'use client';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,13 +6,15 @@ import { cn } from '@/lib/utils';
 
 export const LayoutGrid = ({ cards, handleTransform }) => {
   const [selectedMemory, setSelectedMemory] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // ローディング状態の追加
 
   const openModal = (card) => {
-    setSelectedMemory(card);
+    setSelectedMemory(card); // モーダルを開くときに選択されたカードを設定
   };
 
   const closeModal = () => {
     setSelectedMemory(null);
+    setIsLoading(false); // モーダルを閉じたときにローディングをリセット
   };
 
   // Escキーでモーダルを閉じる
@@ -34,6 +34,24 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
     };
   }, [selectedMemory]);
 
+  const handleTransformClick = async (id) => {
+    setIsLoading(true); // 変換処理の開始時にローディング状態にする
+
+    // 変換処理を実行し、変換された内容を取得
+    const transformedContent = await handleTransform(id); 
+
+    // モーダルの内容を更新（リロードなしで反映）
+    setSelectedMemory((prev) => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        transformedContent: transformedContent, // ここで変換されたデータを設定
+      },
+    }));
+
+    setIsLoading(false); // 変換が終わったらローディングを解除
+  };
+
   return (
     <div className="w-full p-10 grid grid-cols-1 md:grid-cols-3 max-w-7xl mx-auto gap-4 relative">
       {cards.map((card, i) => (
@@ -41,7 +59,7 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
           key={i}
           className={cn(
             card.className,
-            "relative overflow-hidden aspect-square rounded-xl h-auto w-full p-4"
+            "relative overflow-hidden aspect-square h-auto w-full"
           )}
         >
           <motion.div
@@ -96,21 +114,30 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
                 {/* モーダルの内容 */}
                 <div className="p-6">
                   <h2 className="text-2xl font-bold mb-4">詳細情報</h2>
-                  <p className="text-lg font-semibold">入力内容:</p>
+                  <p className="text-lg font-semibold">入力内容</p>
                   <p className="mb-4">{selectedMemory.content.inputContent}</p>
-                  {selectedMemory.content.transformedContent ? (
+                  
+                  {isLoading ? ( // ローディング中の表示
+                    <div className="flex justify-center items-center">
+                      <p className="text-lg font-semibold">Loading...</p>
+                      <span className="loading loading-spinner loading-xs ml-2"></span> {/* スピナーを追加 */}
+                    </div>
+                  ) : selectedMemory.content.transformedContent ? (
                     <>
-                      <p className="text-lg font-semibold">ポジティブ変換:</p>
+                      <p className="text-lg font-semibold">ポジティブ変換</p>
                       <p>{selectedMemory.content.transformedContent}</p>
                     </>
                   ) : (
-                    <button
-                      className="mt-4 bg-blue-500 text-white p-2 rounded"
-                      onClick={() => handleTransform(selectedMemory.id)}
-                    >
-                      ポジティブ変換する
-                    </button>
+                    <div className="flex justify-center"> {/* ボタンを中央に配置 */}
+                      <button
+                        className="bg-[#D5CEC6] hover:bg-[#C0B8AE] text-gray-700 font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full transition-all duration-200"
+                        onClick={() => handleTransformClick(selectedMemory.id)}
+                      >
+                        ポジティブ変換する
+                      </button>
+                    </div>
                   )}
+
                   <p className="text-sm text-gray-500 mt-2">
                     作成日:{" "}
                     {selectedMemory.content.createdAt &&

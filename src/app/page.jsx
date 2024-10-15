@@ -1,7 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { FaPencilAlt, FaMedal, FaLightbulb, FaHandHolding } from "react-icons/fa";
+import ActionButtons from './components/ActionButtons';
 
 function App() {
   return (
@@ -14,8 +13,8 @@ function App() {
         <Image
           src="/1.png"
           alt="Chamomile Tea"
-          width={400}
-          height={400}
+          width={320}
+          height={320}
           className="sm:w-80 sm:h-80 object-cover rounded-lg shadow-lg"
           priority={true}
         />
@@ -25,36 +24,10 @@ function App() {
         カモミールの花言葉は、「逆境に耐える」、<br/>「逆境で生まれる力」、「あなたを癒す」です。<br/>このアプリはあなたの幸せを祈って作りました。
       </p>
 
-      <div className="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Link href="/box">
-          <button
-            className="flex items-center justify-center bg-[#D5CEC6] p-3 sm:p-4 rounded-full shadow-lg text-sm sm:text-lg hover:bg-[#C0B8AE] transition"
-          >
-            <FaPencilAlt className="mr-2" />
-            しまう
-          </button>
-        </Link>
-        <button
-          className="flex items-center justify-center bg-[#D5CEC6] p-3 sm:p-4 rounded-full shadow-lg text-sm sm:text-lg hover:bg-[#C0B8AE] transition"
-        >
-          <FaMedal className="mr-2" />
-          勝つ
-        </button>
-        <button
-          className="flex items-center justify-center bg-[#D5CEC6] p-3 sm:p-4 rounded-full shadow-lg text-sm sm:text-lg hover:bg-[#C0B8AE] transition"
-        >
-          <FaLightbulb className="mr-2" />
-          変換
-        </button>
-        <button
-          className="flex items-center justify-center bg-[#D5CEC6] p-3 sm:p-4 rounded-full shadow-lg text-sm sm:text-lg hover:bg-[#C0B8AE] transition"
-        >
-          <FaHandHolding className="mr-2" />
-          シェア
-        </button>
-      </div>
+      < ActionButtons />
     </div>
   );
 }
+
 
 export default App;

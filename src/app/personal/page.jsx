@@ -60,7 +60,6 @@ const IndexPage = () => {
           throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
-        console.log("Memories fetched from API:", data);  // デバッグログ
         setMemories(data);
       } catch (err) {
         setError(err.message);

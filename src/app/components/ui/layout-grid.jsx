@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
@@ -37,19 +38,33 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
   const handleTransformClick = async (id) => {
     setIsLoading(true); // 変換処理の開始時にローディング状態にする
 
-    // 変換処理を実行し、変換された内容を取得
-    const transformedContent = await handleTransform(id); 
+    try {
+      // 変換処理を実行し、変換された内容を取得
+      const transformedContent = await handleTransform(id);
+      console.log('Transformed Content:', transformedContent); // 変換後の内容をログ出力
 
-    // モーダルの内容を更新（リロードなしで反映）
-    setSelectedMemory((prev) => ({
-      ...prev,
-      content: {
-        ...prev.content,
-        transformedContent: transformedContent, // ここで変換されたデータを設定
-      },
-    }));
-
-    setIsLoading(false); // 変換が終わったらローディングを解除
+      if (transformedContent) {
+        // 状態を更新
+        setSelectedMemory((prev) => {
+          const updatedMemory = {
+            ...prev,
+            content: {
+              ...prev.content,
+              transformedContent: transformedContent,
+            },
+          };
+          console.log('Updated selectedMemory:', updatedMemory); // 更新後の状態をログ出力
+          return updatedMemory;
+        });
+      } else {
+        console.warn('Transformed content is null or undefined.');
+      }
+    } catch (error) {
+      console.error('Error during transformation:', error);
+      // 必要に応じてエラーハンドリングを追加
+    } finally {
+      setIsLoading(false); // 変換が終わったらローディングを解除
+    }
   };
 
   return (
@@ -116,7 +131,7 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
                   <h2 className="text-2xl font-bold mb-4">詳細情報</h2>
                   <p className="text-lg font-semibold">入力内容</p>
                   <p className="mb-4">{selectedMemory.content.inputContent}</p>
-                  
+
                   {isLoading ? ( // ローディング中の表示
                     <div className="flex justify-center items-center">
                       <p className="text-lg font-semibold">Loading...</p>

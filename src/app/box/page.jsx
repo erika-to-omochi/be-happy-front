@@ -1,4 +1,3 @@
-// pages/Step1.js
 'use client';
 
 import React, { useState } from 'react';
@@ -79,8 +78,15 @@ const Step1 = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <h1 className="fixed top-0 left-0 w-full text-2xl sm:text-4xl font-bold mb-4 sm:mb-8 text-center mt-32">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center p-4"
+      style={{
+        backgroundImage: `url('/5.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <h1 className="fixed top-0 left-0 w-full text-2xl sm:text-4xl font-bold mb-4 sm:mb-8 text-center mt-64">
         STEP 1
       </h1>
 
@@ -104,7 +110,6 @@ const Step1 = () => {
         />
       )}
 
-      {/* アクションボタン */}
       <ActionButtons />
     </div>
   );

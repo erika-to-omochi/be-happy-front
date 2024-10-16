@@ -12,7 +12,6 @@ const MemoryInput = ({ memory, handleInputChange, handleSubmit }) => {
         placeholder="あなたが整理したい記憶を、ここに入力してください。"
         rows="4"
       />
-      {/* ボタンを中央に配置するためのコンテナ */}
       <div className="flex justify-center sm:mt-6">
         <button
           onClick={handleSubmit}

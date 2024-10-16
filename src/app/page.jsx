@@ -5,17 +5,14 @@ import ActionButtons from './components/ActionButtons';
 function App() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <h1 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-8 text-center">
-        May you be happy
-      </h1>
-
+      <h1 className="text-6xl mb-32">May you be happy</h1>
       <div className="flex justify-center">
         <Image
-          src="/1.png"
+          src="/6.png"
           alt="Chamomile Tea"
           width={320}
           height={320}
-          className="sm:w-80 sm:h-80 object-cover rounded-lg shadow-lg"
+          className="sm:w-80 sm:h-80 object-cover mb-8"
           priority={true}
         />
       </div>

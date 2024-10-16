@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 const MemoryBox = ({
   isSubmitted,
@@ -16,17 +15,11 @@ const MemoryBox = ({
   return (
     <div className="relative flex justify-center w-full h-auto mb-1 mt-20">
       {!isSubmitted ? (
-        <Image
-          src="/2.png"
-          alt="Chamomile"
-          layout="responsive"
-          width={320}
-          height={320}
-          className="max-w-[320px] object-cover rounded-lg shadow-lg"
-          priority={true}
-        />
+        <div className="max-w-[320px] object-cover rounded-lg shadow-lg flex justify-center items-center">
+        </div>
       ) : (
         <div className="relative w-full h-full flex items-center justify-center">
+          {/* メモリを表示 */}
           <motion.div
             key="memo"
             initial={{ opacity: 1, scale: 1, y: -100 }}
@@ -53,13 +46,11 @@ const MemoryBox = ({
             animate={{ scale: 1 }}
             className="relative"
           >
-            <Image
+            <img
               src="/box1.png"
               alt="開いた箱"
-              width={256}
-              height={256}
-              className="mx-auto"
-              style={{ width: 'auto', height: 'auto' }}
+              className="mx-auto w-48 sm:w-64 md:w-72 lg:w-80"
+              // `w-48`はモバイル用、`sm:w-64`はタブレット、`md:w-72`は中型スクリーン、`lg:w-80`は大型スクリーン用
             />
           </motion.div>
 
@@ -71,13 +62,10 @@ const MemoryBox = ({
               transition={{ duration: 1 }}
               className="absolute top-[0px] transform -translate-x-1/2"
             >
-              <Image
+              <img
                 src="/box2.png"
                 alt="蓋"
-                width={256}
-                height={256}
-                className="mx-auto"
-                style={{ width: 'auto', height: 'auto' }}
+                className="mx-auto w-48 sm:w-64 md:w-72 lg:w-80"
               />
             </motion.div>
           )}

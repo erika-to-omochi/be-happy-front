@@ -29,7 +29,7 @@ const Step1 = () => {
     setIsBoxClosed(false);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/memories`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/memories`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

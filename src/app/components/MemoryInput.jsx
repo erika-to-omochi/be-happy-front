@@ -15,7 +15,7 @@ const MemoryInput = ({ memory, handleInputChange, handleSubmit }) => {
       {/* ボタンを中央に配置するためのコンテナ */}
       <div className="flex justify-center sm:mt-6">
         <button
-          onClick={handleSubmit}ß
+          onClick={handleSubmit}
           className="bg-[#D5CEC6] hover:bg-[#C0B8AE] text-gray-700 font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full transition-all duration-200 mt-4"
         >
           <span className="m-2">送信</span>

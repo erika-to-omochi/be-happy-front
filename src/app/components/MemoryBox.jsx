@@ -68,8 +68,8 @@ const MemoryBox = ({
         </div>
       )}
 
-      {/* 記憶を箱にしまうボタン - 箱の外に配置 */}
-      {!isBoxClosed && !isAnimating && (
+      {/* 記憶を箱にしまうボタン - 送信が完了した後に表示 */}
+      {!isBoxClosed && !isAnimating && isSubmitted && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

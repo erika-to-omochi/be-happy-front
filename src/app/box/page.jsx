@@ -109,8 +109,9 @@ const Step1 = () => {
           handleSubmit={handleSubmit}
         />
       )}
-
-      <ActionButtons />
+      <div className="min-h-[24vh] flex flex-col items-center justify-center p-4">
+        <ActionButtons />
+      </div>
     </div>
   );
 };

@@ -82,7 +82,7 @@ const IndexPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFFCF6]">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center">
           {/* 画像を表示 */}
           <Image src="/7.png" alt="Loading Icon" width={50} height={50} />
@@ -97,22 +97,24 @@ const IndexPage = () => {
   }
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#FFFCF6]"
-    >
-      <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold mt-24">箱に入っている記憶一覧</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 lg:px-8">
+      <h1 className="text-4xl lg:text-3xl md:text-3xl sm:text-xl text-base font-bold mt-16">
+        箱に入っている記憶一覧
+      </h1>
         {memories.length === 0 ? (
           <p className="text-lg">記憶がまだありません。</p>
         ) : (
-          <div className="w-full mt-8">
+          <div className="w-full mt-4">
             <LayoutGrid
               cards={memories}
               handleTransform={handleTransform} // ここで LayoutGrid に handleTransform を渡す
             />
           </div>
         )}
-        <ActionButtons />
+        <div className="min-h-[8vh] flex flex-col items-center justify-center p-4">
+          <ActionButtons />
+        </div>
       </div>
     </div>
   );

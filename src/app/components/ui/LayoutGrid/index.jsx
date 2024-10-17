@@ -10,7 +10,6 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
   const [updatedCards, setUpdatedCards] = useState([]);
 
   useEffect(() => {
-    // cards のデータをマッピングして updatedCards に保存
     const mappedCards = cards.map((card, index) => ({
       ...card,
       content: {
@@ -18,36 +17,33 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
         transformedContent: card.content.transformedContent || card.transformed_content,
         createdAt: card.content.createdAt || card.created_at,
       },
-      // サムネイル画像が存在しない場合、デフォルトの画像を使用
       thumbnail: card.thumbnail || `/images/${index % 17 + 1}.png`,
     }));
     setUpdatedCards(mappedCards);
   }, [cards]);
 
   const openModal = (card) => {
-    setSelectedMemory(card); // モーダルに表示する記憶を設定
+    setSelectedMemory(card);
   };
 
   const closeModal = () => {
-    setSelectedMemory(null); // モーダルを閉じる
+    setSelectedMemory(null);
     setIsLoading(false);
   };
 
   const handleTransformClick = async (id) => {
     setIsLoading(true);
     try {
-      const transformedContent = await handleTransform(id); // 変換処理を実行
+      const transformedContent = await handleTransform(id);
       if (transformedContent) {
-        // 選択された記憶に変換後の内容を即座に反映
         setSelectedMemory((prev) => ({
           ...prev,
           content: {
             ...prev.content,
-            transformedContent: transformedContent,
+            transformedContent,
           },
         }));
 
-        // updatedCards 配列も更新
         setUpdatedCards((prevCards) =>
           prevCards.map((card) =>
             card.id === id
@@ -55,7 +51,8 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
                   ...card,
                   content: {
                     ...card.content,
-                    transformedContent: transformedContent,                  },
+                    transformedContent,
+                  },
                 }
               : card
           )
@@ -69,7 +66,7 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
   };
 
   return (
-    <div className="w-full p-10 grid grid-cols-1 md:grid-cols-3 max-w-7xl mx-auto gap-4 relative">
+    <div className="w-full h-full p-4 grid grid-cols-3 gap-4 justify-items-center mx-auto max-w-screen-lg">
       {updatedCards.map((card) => (
         <ImageCard key={card.id} card={card} onClick={() => openModal(card)} />
       ))}

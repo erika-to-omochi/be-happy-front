@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import LoadingSpinner from '../loading-spinner';
 
 const Modal = ({ selectedMemory, onClose, onTransform, isLoading }) => {
+  useEffect(() => {
+    if (selectedMemory?.content?.transformedContent) {
+      console.log('Transformed content updated:', selectedMemory.content.transformedContent);
+    }
+  }, [selectedMemory?.content?.transformedContent]); // transformedContentが変更されたときに実行
+
   return (
     <AnimatePresence>
       {selectedMemory && (

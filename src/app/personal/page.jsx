@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { LayoutGrid } from '../components/ui/LayoutGrid';
 import ActionButtons from '../components/ActionButtons';
 
@@ -29,12 +30,21 @@ const IndexPage = () => {
       }
       const data = await response.json();
 
+      // レスポンスデータを確認
+      console.log('API response data:', data);
+
+      // transformedContent がデータ内のどこにあるか明確にして取り出す
+      const transformedContent = data.content.transformedContent;
+
+      // transformedContent をログ出力して確認
+      console.log('Transformed content:', transformedContent);
+
       setTransformedContents((prev) => ({
         ...prev,
-        [id]: data.transformed_content,
+        [id]: transformedContent,
       }));
 
-      return data.transformed_content; // 変換された内容を返す
+      return transformedContent; // 変換された内容を返す
     } catch (error) {
       console.error('Transform Error:', error);
       setError(error.message);
@@ -42,6 +52,7 @@ const IndexPage = () => {
       setTransformingIds((prev) => ({ ...prev, [id]: false })); // 変換中フラグをリセット
     }
   };
+
 
   useEffect(() => {
     const fetchMemories = async () => {
@@ -69,26 +80,26 @@ const IndexPage = () => {
     fetchMemories();
   }, []);
 
-  // ローディング中の表示
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FFFCF6]">
-        <p className="text-center text-xl">Loading...</p>
+        <div className="flex items-center">
+          {/* 画像を表示 */}
+          <Image src="/7.png" alt="Loading Icon" width={50} height={50} />
+          <p className="text-center text-xl ml-4">Loading...</p>
+        </div>
       </div>
     );
   }
 
-  // エラー時の表示
   if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFFCF6]">
-        <p className="text-center text-xl text-red-500">Error: {error}</p>
-      </div>
-    );
+    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#FFFCF6]">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#FFFCF6]"
+    >
       <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold mt-24">箱に入っている記憶一覧</h1>
         {memories.length === 0 ? (

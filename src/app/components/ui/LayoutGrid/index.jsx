@@ -43,7 +43,7 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
           ...prev,
           content: {
             ...prev.content,
-            transformedContent,
+            transformedContent: transformedContent,
           },
         }));
 
@@ -55,8 +55,7 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
                   ...card,
                   content: {
                     ...card.content,
-                    transformedContent,
-                  },
+                    transformedContent: transformedContent,                  },
                 }
               : card
           )

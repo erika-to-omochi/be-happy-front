@@ -8,8 +8,8 @@ import { motion } from 'framer-motion';
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <h1 className="text-6xl lg:text-5xl md:text-5xl sm:text-4xl mb-16 mt-32">May you be happy</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#E8C5C0]">
+      <h1 className="text-6xl lg:text-5xl md:text-5xl sm:text-4xl mb-16 mt-24">May you be happy</h1>
       <div className="flex justify-center">
         <Image
           src="/6.png"
@@ -83,7 +83,6 @@ function App() {
       <div className="min-h-[20vh] flex flex-col items-center justify-center p-4">
         <ActionButtons />
       </div>
-
 
     </div>
   );

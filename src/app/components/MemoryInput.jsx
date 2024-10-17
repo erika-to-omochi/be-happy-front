@@ -4,7 +4,7 @@ import React from 'react';
 
 const MemoryInput = ({ memory, handleInputChange, handleSubmit }) => {
   return (
-    <div className="relative w-full max-w-md mt-8">
+    <div className="relative w-full max-w-md mt-56">
       <textarea
         value={memory}
         onChange={handleInputChange}

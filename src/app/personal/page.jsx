@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { LayoutGrid } from '../components/ui/LayoutGrid';
 import ActionButtons from '../components/ActionButtons';
 
@@ -83,12 +84,21 @@ const IndexPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="flex items-center">
-          {/* 画像を表示 */}
+      <div className="flex items-center">
+        {/* 画像に回転アニメーションを追加 */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{
+            repeat: Infinity,
+            duration: 1, // 2秒で1回転
+            ease: "linear", // 一定の速度で回転
+          }}
+        >
           <Image src="/7.png" alt="Loading Icon" width={50} height={50} />
-          <p className="text-center text-xl ml-4">Loading...</p>
-        </div>
+        </motion.div>
+        <p className="text-center text-xl ml-4">Loading...</p>
       </div>
+    </div>
     );
   }
 

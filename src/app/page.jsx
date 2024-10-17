@@ -38,7 +38,7 @@ function App() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 1.5 }}
-              className="bg-white/50 p-4 rounded-lg shadow-lg"
+              className="bg-white/50 p-4 rounded-lg shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer"
             >
               <p className="text-gray-700 text-sm sm:text-lg mb-4">
                 1. 嫌な記憶を箱にしまう
@@ -59,7 +59,7 @@ function App() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 1.7 }}
-              className="bg-white/50 p-4 rounded-lg shadow-lg"
+              className="bg-white/50 p-4 rounded-lg shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer"
             >
               <p className="text-gray-700 text-sm sm:text-lg mb-4">
                 2. AIで嫌な記憶をポジティブ変換

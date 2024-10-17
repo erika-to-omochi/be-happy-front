@@ -46,8 +46,8 @@ function App() {
               <Image
                 src="/how-to-1.png"
                 alt="Step 1"
-                width={300}
-                height={200}
+                width={400}
+                height={400}
                 className="rounded-lg"
               />
             </motion.div>
@@ -67,8 +67,8 @@ function App() {
               <Image
                 src="/how-to-2.png"
                 alt="Step 2"
-                width={300}
-                height={200}
+                width={400}
+                height={400}
                 className="rounded-lg"
               />
             </motion.div>

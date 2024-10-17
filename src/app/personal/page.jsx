@@ -69,18 +69,26 @@ const IndexPage = () => {
     fetchMemories();
   }, []);
 
+  // ローディング中の表示
   if (loading) {
-    return <p className="text-center mt-10">Loading...</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FFFCF6]">
+        <p className="text-center text-xl">Loading...</p>
+      </div>
+    );
   }
 
+  // エラー時の表示
   if (error) {
-    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FFFCF6]">
+        <p className="text-center text-xl text-red-500">Error: {error}</p>
+      </div>
+    );
   }
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center p-4 bg-white"
-    >
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#FFFCF6]">
       <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold mt-24">箱に入っている記憶一覧</h1>
         {memories.length === 0 ? (

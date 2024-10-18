@@ -1,4 +1,5 @@
 import "./globals.css";
+import AuthButton from './components/AuthButton';
 
 export const metadata = {
   title: "Be Happy♥",
@@ -15,6 +16,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="antialiased">
+        <AuthButton />
         {children}
       </body>
     </html>

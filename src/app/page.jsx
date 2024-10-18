@@ -83,7 +83,6 @@ function App() {
       <div className="min-h-[20vh] flex flex-col items-center justify-center p-4">
         <ActionButtons />
       </div>
-
     </div>
   );
 }

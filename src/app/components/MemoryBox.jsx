@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const MemoryBox = ({
   isSubmitted,
@@ -43,9 +44,11 @@ const MemoryBox = ({
             animate={{ scale: 1 }}
             className="relative mt-48"
           >
-            <img
+            <Image
               src="/box1.png"
               alt="開いた箱"
+              width={288} // 適切なサイズを指定
+              height={288} // 適切なサイズを指定
               className="mx-auto w-48 sm:w-64 md:w-72"
             />
           </motion.div>
@@ -58,9 +61,11 @@ const MemoryBox = ({
               transition={{ duration: 1 }}
               className="absolute top-48 transform -translate-x-1/2"
             >
-              <img
+              <Image
                 src="/box2.png"
                 alt="蓋"
+                width={288} // 適切なサイズを指定
+                height={288} // 適切なサイズを指定
                 className="mx-auto w-48 sm:w-64 md:w-72 lg:w-80"
               />
             </motion.div>

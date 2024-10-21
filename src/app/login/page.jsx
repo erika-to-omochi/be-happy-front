@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 function LoginPage() {
   const router = useRouter();
@@ -13,14 +14,13 @@ function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // エラーメッセージをリセット
 
     try {
-      const response = await fetch(`${apiUrl}/users/sign_in`, {
+      const response = await fetch(`${apiUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json', // Rails が JSON を返すようにするため
+          'Accept': 'application/json',
         },
         body: JSON.stringify({
           user: {
@@ -30,14 +30,12 @@ function LoginPage() {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
-
-        // JWT トークンを取得（ヘッダーから取得する場合）
-        const token = response.headers.get('Authorization')?.split(' ')[1];
-
+        const token = response.headers.get('Authorization')?.split(' ')[1]; // ヘッダーからトークンを取得
         if (token) {
-          localStorage.setItem('token', token);
+          localStorage.setItem('token', token); // トークンをlocalStorageに保存
           router.push('/'); // ログイン後のリダイレクト先
         } else {
           setError('トークンが見つかりません');
@@ -52,9 +50,9 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-lg">
-        <h1 className="text-2xl mb-6">ログイン</h1>
-        {error && <p className="text-red-500 mb-4">{error}</p>} {/* エラーメッセージ表示 */}
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-lg w-full max-w-2xl space-y-6">
+        <h1 className="text-2xl mb-6 text-center">ログイン</h1>
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>} {/* エラーメッセージ表示 */}
         <div className="mb-4">
           <label className="block text-gray-700">メールアドレス</label>
           <input
@@ -75,9 +73,20 @@ function LoginPage() {
             required
           />
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-          ログイン
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-[#D5CEC6] hover:bg-[#C0B8AE] text-gray-700 font-bold py-2 px-4 rounded"
+          >
+            ログイン
+          </button>
+        </div>
+        <div className="mt-4 text-center">
+          <p>アカウントをお持ちでないですか？</p>
+          <Link href="/register" className="text-blue-500 hover:underline">
+            新規登録はこちら
+          </Link>
+        </div>
       </form>
     </div>
   );

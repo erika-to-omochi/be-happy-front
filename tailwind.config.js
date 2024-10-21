@@ -13,7 +13,8 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('daisyui')
-  ],
+  plugins: [require('daisyui')],
+  daisyui: {
+    themes: ["light", "dark", "cupcake", "forest"], // 必要なテーマを追加
+  },
 };

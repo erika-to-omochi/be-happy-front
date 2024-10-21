@@ -14,6 +14,8 @@ const Step1 = () => {
 
   const controls = useAnimation();
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const handleInputChange = (e) => {
     setMemory(e.target.value);
   };
@@ -28,7 +30,7 @@ const Step1 = () => {
     setIsBoxClosed(false);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/memories`, {
+      const response = await fetch(`${apiUrl}/memories`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

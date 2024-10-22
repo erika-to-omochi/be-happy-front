@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { LayoutGrid } from '../components/ui/LayoutGrid';
 import ActionButtons from '../components/ActionButtons';
 
-const IndexPage = () => {
+const MyMemoriesPage = () => {
   const [memories, setMemories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,12 +16,14 @@ const IndexPage = () => {
 
   const handleTransform = async (id) => {
     try {
-      setTransformingIds((prev) => ({ ...prev, [id]: true })); // 変換中フラグをセット
+      setTransformingIds((prev) => ({ ...prev, [id]: true }));
+      const token = localStorage.getItem('token'); // トークンを取得
       const response = await fetch(`${apiUrl}/memories/${id}/transform`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`, // 認証トークンをヘッダーに追加
         },
       });
 
@@ -31,14 +33,7 @@ const IndexPage = () => {
       }
 
       const data = await response.json();
-
-      // レスポンスデータを確認
-      console.log('API response data:', data);
-
-      // transformedContent がデータ内のどこにあるか明確にして取り出す
       const transformedContent = data.content.transformedContent;
-
-      // transformedContent をログ出力して確認
       console.log('Transformed content:', transformedContent);
 
       setTransformedContents((prev) => ({
@@ -46,19 +41,31 @@ const IndexPage = () => {
         [id]: transformedContent,
       }));
 
-      return transformedContent; // 変換された内容を返す
+      return transformedContent;
     } catch (error) {
       console.error('Transform Error:', error);
       setError(error.message);
     } finally {
-      setTransformingIds((prev) => ({ ...prev, [id]: false })); // 変換中フラグをリセット
+      setTransformingIds((prev) => ({ ...prev, [id]: false }));
     }
   };
 
   useEffect(() => {
     const fetchMemories = async () => {
+      const token = localStorage.getItem('token'); // ログインしているユーザーのトークンを取得
+
+      if (!token) {
+        setError('トークンがありません。ログインしてください。');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(`${apiUrl}/memories`);
+        const response = await fetch(`${apiUrl}/memories/my_page`, {
+          headers: {
+            'Authorization': `Bearer ${token}`, // 認証トークンをヘッダーに追加
+          },
+        });
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -79,19 +86,18 @@ const IndexPage = () => {
     };
 
     fetchMemories();
-  }, []);
+  }, [apiUrl]);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center">
-          {/* 画像に回転アニメーションを追加 */}
           <motion.div
             animate={{ rotate: 360 }}
             transition={{
               repeat: Infinity,
-              duration: 1, // 2秒で1回転
-              ease: "linear", // 一定の速度で回転
+              duration: 1,
+              ease: "linear",
             }}
           >
             <Image src="/7.png" alt="Loading Icon" width={50} height={50} />
@@ -110,7 +116,7 @@ const IndexPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl lg:text-3xl md:text-3xl sm:text-xl text-base font-bold mt-16">
-          箱に入っている記憶一覧
+          私の記憶一覧
         </h1>
         {memories.length === 0 ? (
           <p className="text-lg">記憶がまだありません。</p>
@@ -118,7 +124,7 @@ const IndexPage = () => {
           <div className="w-full mt-4">
             <LayoutGrid
               cards={memories}
-              handleTransform={handleTransform} // ここで LayoutGrid に handleTransform を渡す
+              handleTransform={handleTransform} // handleTransform を渡す
             />
           </div>
         )}
@@ -130,4 +136,4 @@ const IndexPage = () => {
   );
 };
 
-export default IndexPage;
+export default MyMemoriesPage;

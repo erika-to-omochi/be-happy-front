@@ -20,27 +20,37 @@ const Step1 = () => {
     setMemory(e.target.value);
   };
 
-  const handleSubmit = async () => {
-    await controls.start({
-      scale: 0.1,
-      y: 50,
-      transition: { duration: 1 },
-    });
-    setIsSubmitted(true);
-    setIsBoxClosed(false);
+  const handleSubmit = async (memoryContent) => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.error('トークンがありません。ログインが必要です。');
+      return;
+    }
 
     try {
       const response = await fetch(`${apiUrl}/memories`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,  // トークンをヘッダーに追加
         },
-        body: JSON.stringify({ memory: { content: memory } }),
+        body: JSON.stringify({ memory: { content: memoryContent } }),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log('Memory saved successfully:', data);
+
+        // アニメーション処理
+        await controls.start({
+          scale: 0.1,
+          y: 50,
+          transition: { duration: 1 },
+        });
+
+        setIsSubmitted(true);
+        setIsBoxClosed(false);
       } else {
         const errorData = await response.json();
         console.error('Failed to save memory:', errorData);
@@ -108,7 +118,7 @@ const Step1 = () => {
         <MemoryInput
           memory={memory}
           handleInputChange={handleInputChange}
-          handleSubmit={handleSubmit}
+          handleSubmit={() => handleSubmit(memory)}
         />
       )}
       <div className="min-h-[24vh] flex flex-col items-center justify-center p-4">

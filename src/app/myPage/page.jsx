@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { LayoutGrid } from '../components/ui/LayoutGrid';
 import ActionButtons from '../components/ActionButtons';
+import LogoutButton from '../components/LogoutButton'; // LogoutButtonをインポート
 
 const MyMemoriesPage = () => {
   const [memories, setMemories] = useState([]);
@@ -12,7 +13,27 @@ const MyMemoriesPage = () => {
   const [error, setError] = useState(null);
   const [transformingIds, setTransformingIds] = useState({});
   const [transformedContents, setTransformedContents] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // ログイン状態を保持
+  const [logoutMessage, setLogoutMessage] = useState(''); // ログアウトメッセージを保持
+
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  // ログイン状態のチェック
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // ログアウトメッセージの表示
+  useEffect(() => {
+    const message = localStorage.getItem('logoutMessage');
+    if (message) {
+      setLogoutMessage(message);
+      localStorage.removeItem('logoutMessage'); // メッセージを一度表示したら削除
+    }
+  }, []);
 
   const handleTransform = async (id) => {
     try {
@@ -53,9 +74,8 @@ const MyMemoriesPage = () => {
   useEffect(() => {
     const fetchMemories = async () => {
       const token = localStorage.getItem('token'); // ログインしているユーザーのトークンを取得
-
       if (!token) {
-        setError('トークンがありません。ログインしてください。');
+        setError('マイページを見るには、ログインが必要です。');
         setLoading(false);
         return;
       }
@@ -109,17 +129,34 @@ const MyMemoriesPage = () => {
   }
 
   if (error) {
-    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <p className="text-center mt-10 text-xl text-black">{error}</p>
+        <div className="min-h-[8vh] flex flex-col items-center justify-center p-4">
+          <ActionButtons />
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center p-4">
+      {/* ログインしている場合にのみログアウトボタンを表示 */}
+      {isLoggedIn && (
+        <div className="absolute top-4 left-4">
+          <LogoutButton setIsLoggedIn={setIsLoggedIn} /> {/* LogoutButtonの表示 */}
+        </div>
+      )}
+
+      {/* ログアウトメッセージの表示 */}
+      {logoutMessage && (
+        <p className="text-xl text-[#E8C5C0] mb-4">{logoutMessage}</p>
+      )}
+
+      <h1 className="text-4xl lg:text-5xl md:text-5xl sm:text-4xl mb-16 mt-24 font-bold">私の記憶一覧</h1>
       <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl lg:text-3xl md:text-3xl sm:text-xl text-base font-bold mt-16">
-          私の記憶一覧
-        </h1>
         {memories.length === 0 ? (
-          <p className="text-lg">記憶がまだありません。</p>
+          <p className="text-lg">記憶がまだありません。<br />『記憶をしまう』から投稿できます。</p>
         ) : (
           <div className="w-full mt-4">
             <LayoutGrid

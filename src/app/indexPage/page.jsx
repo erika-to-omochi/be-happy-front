@@ -126,9 +126,6 @@ const IndexPage = () => {
           <ActionButtons />
         </div>
       </div>
-      <div className="min-h-[8vh] flex flex-col items-center justify-center p-4">
-          <ActionButtons />
-        </div>
     </div>
   );
 };

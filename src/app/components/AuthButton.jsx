@@ -6,19 +6,34 @@ import { useEffect, useState } from 'react';
 function AuthButton() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedInEmail, setLoggedInEmail] = useState('');
 
   // ログイン状態のチェック
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token); // トークンがあればログインしていると判断
-  }, []);
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('token');
+      const email = localStorage.getItem('email');
+      if (token && email) {
+        setIsLoggedIn(true);
+        setLoggedInEmail(email);
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
 
-  // ログアウト処理
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    router.push('/login');
-  };
+    // 初回ロード時にログイン状態を確認
+    checkLoginStatus();
+
+    // カスタムイベントのリスナーを登録
+    window.addEventListener('login', checkLoginStatus);  // ログイン時
+    window.addEventListener('logout', checkLoginStatus); // ログアウト時
+
+    // コンポーネントがアンマウントされるときにリスナーを削除
+    return () => {
+      window.removeEventListener('login', checkLoginStatus);
+      window.removeEventListener('logout', checkLoginStatus);
+    };
+  }, []);
 
   // ログインページへの遷移
   const handleLogin = () => {
@@ -28,12 +43,9 @@ function AuthButton() {
   return (
     <div>
       {isLoggedIn ? (
-        <button
-          onClick={handleLogout}
-          className="bg-[#D5CEC6] hover:bg-[#C0B8AE] text-gray-700 font-bold p-2 rounded absolute top-4 right-4"
-        >
-          ログアウト
-        </button>
+        <p className="text-gray-700 font-bold p-2 absolute top-4 right-4">
+          ログイン中のユーザー: {loggedInEmail}
+        </p>
       ) : (
         <button
           onClick={handleLogin}

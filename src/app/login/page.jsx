@@ -34,9 +34,14 @@ function LoginPage() {
 
       if (response.ok) {
         const token = response.headers.get('Authorization')?.split(' ')[1]; // ヘッダーからトークンを取得
+        const data = await response.json();
+        const name = data.user.name;
+
+        console.log('name:', name); // デバッグ用
+
         if (token) {
           localStorage.setItem('token', token); // トークンをlocalStorageに保存
-          localStorage.setItem('email', email); // ログイン時のメールアドレスをlocalStorageに保存
+          localStorage.setItem('name', name);
           setSuccessMessage('ログインしました！');
 
           // カスタムイベントを発行してログイン状態の変更を通知
@@ -82,7 +87,7 @@ function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
             required
-            autoComplete="username"
+            autoComplete="name"
           />
         </div>
         <div className="mb-4">

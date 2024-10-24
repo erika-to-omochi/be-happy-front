@@ -6,16 +6,18 @@ import { useEffect, useState } from 'react';
 function AuthButton() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loggedInEmail, setLoggedInEmail] = useState('');
+  const [name, setName] = useState('');
 
   // ログイン状態のチェック
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = localStorage.getItem('token');
-      const email = localStorage.getItem('email');
-      if (token && email) {
+      const storedName = localStorage.getItem('name')
+      console.log('Token:', token); // トークンの確認
+      console.log('Name:', storedName);
+      if (token && storedName) {
         setIsLoggedIn(true);
-        setLoggedInEmail(email);
+        setName(storedName);
       } else {
         setIsLoggedIn(false);
       }
@@ -44,7 +46,7 @@ function AuthButton() {
     <div>
       {isLoggedIn ? (
         <p className="text-gray-700 font-bold p-2 absolute top-4 right-4">
-          ログイン中のユーザー: {loggedInEmail}
+          ようこそ {name} さん
         </p>
       ) : (
         <button

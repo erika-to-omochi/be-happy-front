@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import ImageCard from '../image-card';
 import Modal from '../modal';
 
-export const LayoutGrid = ({ cards, handleTransform }) => {
+export const LayoutGrid = ({ cards, handleTransform, currentUser }) => { // currentUser を受け取る
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [updatedCards, setUpdatedCards] = useState([]);
@@ -31,10 +31,10 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
     setIsLoading(false);
   };
 
-  const handleTransformClick = async (id) => {
+  const handleTransformClick = async (id, userId) => {
     setIsLoading(true);
     try {
-      const transformedContent = await handleTransform(id);
+      const transformedContent = await handleTransform(id, userId); // userId を渡す
       if (transformedContent) {
         setSelectedMemory((prev) => ({
           ...prev,
@@ -74,8 +74,9 @@ export const LayoutGrid = ({ cards, handleTransform }) => {
         <Modal
           selectedMemory={selectedMemory}
           onClose={closeModal}
-          onTransform={() => handleTransformClick(selectedMemory.id)}
+          onTransform={() => handleTransformClick(selectedMemory.id, selectedMemory.user?.id)} // user?.id を使用して安全に取得
           isLoading={isLoading}
+          currentUser={currentUser} // currentUser を Modal に渡す
         />
       )}
     </div>

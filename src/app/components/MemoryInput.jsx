@@ -2,46 +2,55 @@
 
 import React, { useEffect, useState } from 'react';
 
-const MemoryInput = ({ memory, handleInputChange, handleSubmit }) => {
+const MemoryInput = ({ memory, handleInputChange, handleSubmit, isLoggedOut }) => {
   const [name, setName] = useState('ゲスト');
 
   // ログイン状態に応じて名前を設定
   useEffect(() => {
-    const storedName = localStorage.getItem('name');
-    if (storedName) {
-      setName(storedName);
+    if (isLoggedOut) {
+      setName('ゲスト');
+      localStorage.removeItem('name');  // localStorage から名前を削除
+    } else {
+      const storedName = localStorage.getItem('name');
+      if (storedName) {
+        setName(storedName);
+      }
     }
-  }, []);
+  }, [isLoggedOut]);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
+    localStorage.setItem('name', e.target.value);  // 名前を localStorage に保存
   };
 
   const handleFormSubmit = () => {
+    console.log("Name:", name);
     handleSubmit({ memory, name: name });
   };
 
   return (
-    <div className="relative w-full max-w-md mt-56">
+    <div className="flex flex-col items-center justify-center w-full max-w-[70%]">
       {/* 名前入力フィールド */}
-      <div className="mb-4">
+      <div className="mb-4 w-full flex justify-center">
         <input
           type="text"
           value={name}
           onChange={handleNameChange}
-          className="w-full p-3 sm:p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300"
-          placeholder="あなたの名前を入力してください"
+          className="w-1/2 p-3 sm:p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300"
+          placeholder="名前を入力"
         />
       </div>
 
       {/* 記憶入力フィールド */}
-      <textarea
-        value={memory}
-        onChange={handleInputChange}
-        className="w-full p-3 sm:p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300"
-        placeholder="あなたが整理したい記憶を、ここに入力してください。"
-        rows="4"
-      />
+      <div className="w-full">
+        <textarea
+          value={memory}
+          onChange={handleInputChange}
+          className="w-full p-3 sm:p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300"
+          placeholder="あなたが整理したい記憶を、ここに入力してください。"
+          rows="6"
+        />
+      </div>
 
       <div className="flex justify-center sm:mt-6">
         <button

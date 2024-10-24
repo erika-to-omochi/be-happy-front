@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { LayoutGrid } from '../components/ui/LayoutGrid';
-import ActionButtons from '../components/ActionButtons';
 
 const IndexPage = () => {
   const [memories, setMemories] = useState([]);
@@ -14,44 +13,44 @@ const IndexPage = () => {
   const [transformedContents, setTransformedContents] = useState({});
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  const handleTransform = async (id) => {
-    const token = localStorage.getItem('token');
+  const handleTransform = async (id, content) => {
+    const token = localStorage.getItem('token') || localStorage.getItem('guestToken');
+    if (!token) {
+      console.error('トークンがありません。ログインが必要です。');
+      setError('ログインが必要です。');
+      return;
+    }
     try {
       setTransformingIds((prev) => ({ ...prev, [id]: true })); // 変換中フラグをセット
+
       const response = await fetch(`${apiUrl}/memories/${id}/transform`, {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
+        body: JSON.stringify({ memory: { content } }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
+        if (response.status === 403) {
+          throw new Error('他の人の記憶は変換できません'); // サーバー側からのメッセージに変更
+        }
         throw new Error(errorData.error || '変換に失敗しました');
       }
 
       const data = await response.json();
-
-      // レスポンスデータを確認
-      console.log('API response data:', data);
-
-      // transformedContent がデータ内のどこにあるか明確にして取り出す
       const transformedContent = data.content.transformedContent;
-
-      // transformedContent をログ出力して確認
-      console.log('Transformed content:', transformedContent);
-
       setTransformedContents((prev) => ({
         ...prev,
         [id]: transformedContent,
       }));
-
-      return transformedContent; // 変換された内容を返す
+      return transformedContent;
     } catch (error) {
       console.error('Transform Error:', error);
-      setError(error.message);
+      setError(error.message);  // エラーメッセージを state に保存
     } finally {
       setTransformingIds((prev) => ({ ...prev, [id]: false })); // 変換中フラグをリセット
     }
@@ -105,13 +104,17 @@ const IndexPage = () => {
   }
 
   if (error) {
-    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-center text-xl text-red-500">{error}</p>
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4">
       <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 lg:px-8">
-      <h1 className="text-4xl lg:text-5xl md:text-5xl sm:text-4xl mb-16 mt-24 font-bold">みんなの記憶一覧</h1>
+        <h1 className="text-4xl lg:text-5xl md:text-5xl sm:text-4xl mb-16 mt-24 font-bold">みんなの記憶一覧</h1>
         {memories.length === 0 ? (
           <p className="text-lg">記憶がまだありません。</p>
         ) : (
@@ -122,9 +125,6 @@ const IndexPage = () => {
             />
           </div>
         )}
-        <div className="min-h-[8vh] flex flex-col items-center justify-center p-4">
-          <ActionButtons />
-        </div>
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { LayoutGrid } from '../components/ui/LayoutGrid';
-import ActionButtons from '../components/ActionButtons';
 import LogoutButton from '../components/LogoutButton'; // LogoutButtonをインポート
 
 const MyMemoriesPage = () => {
@@ -132,9 +131,6 @@ const MyMemoriesPage = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
         <p className="text-center mt-10 text-xl text-black">{error}</p>
-        <div className="min-h-[8vh] flex flex-col items-center justify-center p-4">
-          <ActionButtons />
-        </div>
       </div>
     );
   }
@@ -165,9 +161,6 @@ const MyMemoriesPage = () => {
             />
           </div>
         )}
-        <div className="min-h-[8vh] flex flex-col items-center justify-center p-4">
-          <ActionButtons />
-        </div>
       </div>
     </div>
   );

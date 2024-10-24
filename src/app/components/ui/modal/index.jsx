@@ -9,6 +9,9 @@ const Modal = ({ selectedMemory, onClose, onTransform, isLoading }) => {
     }
   }, [selectedMemory?.content?.transformedContent]); // transformedContentが変更されたときに実行
 
+  // ユーザー名がない場合は「ゲスト」と表示
+  const name = selectedMemory?.user?.name || 'ゲスト';
+
   return (
     <AnimatePresence>
       {selectedMemory && (
@@ -41,6 +44,9 @@ const Modal = ({ selectedMemory, onClose, onTransform, isLoading }) => {
                 <h2 className="text-2xl font-bold mb-4">詳細情報</h2>
                 <div className="text-lg font-semibold">入力内容</div>
                 <div className="mb-4">{selectedMemory.content.inputContent}</div>
+
+                {/* 投稿した人の名前を表示 */}
+                <div className="text-lg font-semibold mb-2">投稿者: {name}</div>
 
                 {isLoading ? (
                   <div className="flex justify-center items-center">

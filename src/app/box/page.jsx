@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAnimation } from 'framer-motion';
 import MemoryInput from '../components/MemoryInput';
 import MemoryBox from '../components/MemoryBox';
@@ -11,16 +11,24 @@ const Step1 = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isBoxClosed, setIsBoxClosed] = useState(false);
+  const [name, setName] = useState('ゲスト'); // 初期値をゲストに設定
 
   const controls = useAnimation();
-
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  // ユーザー名を localStorage から取得
+  useEffect(() => {
+    const storedName = localStorage.getItem('name');
+    if (storedName) {
+      setName(storedName);
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     setMemory(e.target.value);
   };
 
-  const handleSubmit = async (memoryContent) => {
+  const handleSubmit = async () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -33,9 +41,15 @@ const Step1 = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,  // トークンをヘッダーに追加
+          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`, // トークンを送信
         },
-        body: JSON.stringify({ memory: { content: memoryContent } }),
+        body: JSON.stringify({
+          memory: {
+            content: memory, // 送信する記憶内容
+            name: name,
+          },
+        }),
       });
 
       if (response.ok) {
@@ -118,7 +132,7 @@ const Step1 = () => {
         <MemoryInput
           memory={memory}
           handleInputChange={handleInputChange}
-          handleSubmit={() => handleSubmit(memory)}
+          handleSubmit={handleSubmit}
         />
       )}
       <div className="min-h-[24vh] flex flex-col items-center justify-center p-4">

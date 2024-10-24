@@ -6,11 +6,12 @@ import Link from 'next/link';
 
 function SignupPage() {
   const router = useRouter();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(''); // 成功メッセージの状態
+  const [successMessage, setSuccessMessage] = useState('');
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -26,6 +27,7 @@ function SignupPage() {
         },
         body: JSON.stringify({
           user: {
+            name,
             email,
             password,
             password_confirmation: passwordConfirmation,
@@ -36,25 +38,24 @@ function SignupPage() {
       const data = await response.json();
 
       if (response.ok) {
-        const token = data.token || response.headers.get('Authorization')?.split(' ')[1]; // ヘッダーまたはレスポンスからトークンを取得
+        const token = data.token || response.headers.get('Authorization')?.split(' ')[1];
+        const name = data.user.name;
         if (token) {
           localStorage.setItem('token', token); // トークンをlocalStorageに保存
-          localStorage.setItem('email', email); // メールアドレスも保存（必要に応じて）
+          localStorage.setItem('name', name); // nameをlocalStorageに保存
 
-          setSuccessMessage('登録しました！ログイン中...'); // 成功メッセージを設定
+          setSuccessMessage('登録しました！ログイン中...');
 
-          // カスタムイベントを発行してログイン状態を通知
           window.dispatchEvent(new Event('login'));
 
-          // すぐにログイン状態にして、ホームにリダイレクト
           setTimeout(() => {
-            router.push('/'); // 成功時のリダイレクト
+            router.push('/');
           }, 1000);
         } else {
           setError('トークンが見つかりません');
         }
       } else {
-        console.error(data); // サーバーからのエラー内容をコンソールに表示
+        console.error(data);
         setError(data.errors || '登録に失敗しました');
       }
     } catch (error) {
@@ -67,7 +68,18 @@ function SignupPage() {
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-lg w-full max-w-2xl space-y-6">
         <h1 className="text-2xl mb-6 text-center">新規登録</h1>
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-        {successMessage && <p className="text-[#E8C5C0] mb-4 text-center">{successMessage}</p>} {/* 成功メッセージ表示 */}
+        {successMessage && <p className="text-[#E8C5C0] mb-4 text-center">{successMessage}</p>}
+        <div className="mb-4">
+          <label className="block text-gray-700">名前</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+            autoComplete="name"
+          />
+        </div>
         <div className="mb-4">
           <label className="block text-gray-700">メールアドレス</label>
           <input
@@ -76,7 +88,7 @@ function SignupPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
             required
-            autoComplete="username"
+            autoComplete="name"
           />
         </div>
         <div className="mb-4">

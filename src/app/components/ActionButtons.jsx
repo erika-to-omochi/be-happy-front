@@ -16,7 +16,7 @@ const ActionButtons = () => {
         </Link>
         <Link href="/indexPage" className="flex flex-col items-center justify-center hover:text-[#C0B8AE] transition">
           <FaLightbulb className="text-3xl" />
-          <span className="mt-2 text-sm sm:text-lg">ポジティブ変換</span>
+          <span className="mt-2 text-sm sm:text-lg">みんなの記憶</span>
         </Link>
         <Link href="/myPage" className="flex flex-col items-center justify-center hover:text-[#C0B8AE] transition">
           < FaSmileWink className="text-3xl" />

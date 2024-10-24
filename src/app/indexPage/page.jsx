@@ -15,6 +15,7 @@ const IndexPage = () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const handleTransform = async (id) => {
+    const token = localStorage.getItem('token');
     try {
       setTransformingIds((prev) => ({ ...prev, [id]: true })); // 変換中フラグをセット
       const response = await fetch(`${apiUrl}/memories/${id}/transform`, {
@@ -22,6 +23,7 @@ const IndexPage = () => {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
       });
 

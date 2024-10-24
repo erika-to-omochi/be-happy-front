@@ -5,7 +5,7 @@ function LogoutButton({ setIsLoggedIn }) {
 
   const handleLogout = () => {
     localStorage.removeItem('token'); // トークンを削除
-    localStorage.removeItem('email'); // メールアドレスも削除
+    localStorage.removeItem('name'); // 名前を削除
     setIsLoggedIn(false); // ログアウト状態を更新
 
     // カスタムイベントを発行してログアウト状態を通知
@@ -14,11 +14,8 @@ function LogoutButton({ setIsLoggedIn }) {
     // ログアウトメッセージをlocalStorageに一時的に保存
     localStorage.setItem('logoutMessage', 'ログアウトしました');
 
-    // カスタムイベントを発行してログアウト状態を通知
-    window.dispatchEvent(new Event('logout'));
-
-    setIsLoggedIn(false);
-    router.push('/'); // ログアウト後にリダイレクト
+    // ホームページにリダイレクト
+    router.push('/');
   };
 
   return (

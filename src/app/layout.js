@@ -1,5 +1,6 @@
 import "./globals.css";
 import AuthButton from './components/AuthButton';
+import ActionButtons from './components/ActionButtons'; // フッターのボタンをインポート
 
 export const metadata = {
   title: "Be Happy♥",
@@ -18,6 +19,11 @@ export default function RootLayout({ children }) {
       <body className="antialiased">
         <AuthButton />
         {children}
+        <footer className="w-full flex items-center justify-center p-4 bg-gray-100">
+          <div className="min-h-[8vh] flex flex-col items-center justify-center p-4">
+            <ActionButtons />
+          </div>
+        </footer>
       </body>
     </html>
   );

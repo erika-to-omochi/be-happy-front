@@ -4,77 +4,66 @@ import React, { useState, useEffect } from 'react';
 import { useAnimation } from 'framer-motion';
 import MemoryInput from '../components/MemoryInput';
 import MemoryBox from '../components/MemoryBox';
+import LoginModal from '../components/LoginModal';
 
 const Step1 = () => {
-  // 状態の初期化
   const [memory, setMemory] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isBoxClosed, setIsBoxClosed] = useState(false);
-  const [name, setName] = useState('ゲスト'); // 初期値をゲストに設定
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 実際のログイン状態
-  const [isGuest, setIsGuest] = useState(false); // ゲストログイン状態
-  const [isLoading, setIsLoading] = useState(true); // 初期読み込み状態を追加
+  const [name, setName] = useState('ゲスト');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const controls = useAnimation();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  console.log('API URL:', apiUrl);
-
   // クライアントサイドでのみlocalStorageにアクセス
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // localStorageからトークンを取得
       const token = localStorage.getItem('token');
       const guestToken = localStorage.getItem('guestToken');
 
-      console.log('取得したトークン:', token);
-      console.log('取得したゲストトークン:', guestToken);
-
-      // 実際のユーザーがログインしているかを確認
       if (token && token !== 'null' && token !== 'undefined' && token.trim() !== '') {
         setIsLoggedIn(true);
         setIsGuest(false);
-        console.log('実際のトークンが見つかりました。isLoggedIn を true に設定します。');
-
-        // トークンからユーザー名を取得する処理
         fetchUserName(token);
-      } 
-      // ゲストとしてログインしているかを確認
-      else if (guestToken && guestToken !== 'null' && guestToken !== 'undefined' && guestToken.trim() !== '') {
+      } else if (guestToken && guestToken !== 'null' && guestToken !== 'undefined' && guestToken.trim() !== '') {
         setIsGuest(true);
         setIsLoggedIn(false);
-        console.log('ゲストトークンが見つかりました。isGuest を true に設定します。');
       } else {
         setIsLoggedIn(false);
         setIsGuest(false);
-        console.log('トークンが見つかりません。isLoggedIn と isGuest は false のままです。');
+        setShowModal(true); 
       }
-      setIsLoading(false); // 読み込み完了
+      setIsLoading(false); 
     }
   }, []);
 
-  // ユーザー名を取得する関数
-  const fetchUserName = async (token) => {
+  const handleLogin = async () => {
     try {
-      const response = await fetch(`${apiUrl}/user`, {
+      const response = await fetch(`${apiUrl}/login`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
+        body: JSON.stringify({ username: 'username', password: 'password' }), // ユーザー情報を追加
       });
 
       if (response.ok) {
         const data = await response.json();
-        setName(data.user_name || 'ゲスト');
-        console.log('ユーザー名を取得しました:', data.user_name);
+        localStorage.setItem('token', data.token); 
+        setIsLoggedIn(true); 
+        setIsGuest(false);
+        setShowModal(false); 
+        fetchUserName(data.token); 
       } else {
-        console.error('ユーザー情報の取得に失敗しました');
-        setName('ゲスト');
+        console.error('ログインに失敗しました');
       }
     } catch (error) {
-      console.error('ユーザー情報取得エラー:', error);
-      setName('ゲスト');
+      console.error('ログインエラー:', error);
     }
   };
 
@@ -90,32 +79,40 @@ const Step1 = () => {
 
       if (response.ok) {
         const data = await response.json();
-        if (data.token && data.token !== 'null' && data.token !== 'undefined' && data.token.trim() !== '') { // トークンが存在し、正当な値か確認
-          localStorage.setItem('guestToken', data.token); // ゲストトークンを保存
-          setIsGuest(true); // ゲスト状態を更新
-          setIsLoggedIn(false); // 実際のログイン状態をfalseに設定
-          setName('ゲスト'); // 名前をゲストにリセット
-          console.log('ゲストとしてログインしました');
-        } else {
-          console.error('ゲストログインに失敗しました: トークンが返されませんでした');
-        }
+        localStorage.setItem('guestToken', data.token); 
+        setIsGuest(true); 
+        setIsLoggedIn(false);
+        setName('ゲスト'); 
+        setShowModal(false); 
+        console.log('ゲストとしてログインしました');
       } else {
-        const errorData = await response.json();
-        console.error('ゲストログインに失敗しました:', errorData);
+        console.error('ゲストログインに失敗しました');
       }
     } catch (error) {
-      console.error('エラー:', error);
+      console.error('ゲストログインエラー:', error);
     }
   };
 
-  // ログアウトする関数
-  const handleLogout = () => {
-    localStorage.removeItem('guestToken');
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    setIsGuest(false);
-    setName('ゲスト');
-    console.log('ログアウトしました。トークンを削除しました。');
+  const fetchUserName = async (token) => {
+    try {
+      const response = await fetch(`${apiUrl}/user`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setName(data.user_name || 'ゲスト');
+      } else {
+        console.error('ユーザー情報の取得に失敗しました');
+        setName('ゲスト');
+      }
+    } catch (error) {
+      console.error('ユーザー情報取得エラー:', error);
+      setName('ゲスト');
+    }
   };
 
   // メモリ入力のハンドラー
@@ -125,83 +122,58 @@ const Step1 = () => {
 
   // メモリの送信ハンドラー
   const handleSubmit = async () => {
-    const token = localStorage.getItem('token');
-    const guestToken = localStorage.getItem('guestToken');
+    if (!isLoggedIn && !isGuest) {
+      setShowModal(true); // 未ログインの場合、モーダルを表示
+    } else {
+      try {
+        const token = localStorage.getItem('token');
+        const guestToken = localStorage.getItem('guestToken');
+        const currentToken = token || guestToken;
 
-    if (!token && !guestToken) {
-      console.error('トークンがありません。ログインが必要です。');
-      return;
-    }
-
-    const currentToken = token || guestToken;
-
-    if (currentToken === 'null' || currentToken === 'undefined' || currentToken.trim() === '') {
-      console.error('無効なトークンです。');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${apiUrl}/memories`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${currentToken}`, // トークンを送信
-        },
-        body: JSON.stringify({
-          memory: {
-            content: memory, // 送信する記憶内容
-            name: name,
+        const response = await fetch(`${apiUrl}/memories`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`,
           },
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Memory saved successfully:', data);
-
-        // アニメーション処理
-        await controls.start({
-          scale: 0.1,
-          y: 50,
-          transition: { duration: 1 },
+          body: JSON.stringify({
+            memory: { content: memory, name: name },
+          }),
         });
 
-        setIsSubmitted(true);
-        setIsBoxClosed(false);
-      } else {
-        const errorData = await response.json();
-        console.error('Failed to save memory:', errorData);
+        if (response.ok) {
+          setIsSubmitted(true);
+          setIsBoxClosed(false);
+        } else {
+          console.error('メモリの保存に失敗しました');
+        }
+      } catch (error) {
+        console.error('送信エラー:', error);
       }
-    } catch (error) {
-      console.error('Error:', error);
     }
   };
 
-  // ストア処理のハンドラー
+  // 記憶を箱にしまうアニメーション処理
   const handleStore = async () => {
     setIsAnimating(true);
-
     try {
       await controls.start({
         scale: 0.3,
         transition: { duration: 1 },
       });
-
       await controls.start({
         y: 80,
         transition: { duration: 1 },
       });
-
       setIsBoxClosed(true);
     } catch (error) {
-      console.error('Animation error:', error);
+      console.error('アニメーションエラー:', error);
     } finally {
       setIsAnimating(false);
     }
   };
 
-  // 続行処理のハンドラー
+  // 続行のリセット処理
   const handleContinue = () => {
     setIsSubmitted(false);
     setMemory('');
@@ -209,17 +181,34 @@ const Step1 = () => {
     controls.set({ scale: 1, y: 0 });
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('guestToken');
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setIsGuest(false);
+    setName('ゲスト');
+  };
+
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center w-full max-w-5xl"
+      className="min-h-screen flex flex-col items-center justify-center w-full max-w-4xl px-4 mx-auto"
       style={{
         backgroundImage: `url('/5.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      <h1 className="text-4xl lg:text-5xl md:text-5xl sm:text-4xl mb-16 mt-24 font-bold">記憶をしまう</h1>
+      <h1 className="w-full text-2xl sm:text-4xl font-bold text-center">
+        記憶をしまう
+      </h1>
 
+      {/* モーダルの表示 */}
+      <LoginModal
+        showModal={showModal}
+        onClose={() => setShowModal(false)}
+        onLogin={handleLogin}
+        onGuestLogin={handleGuestLogin}
+      />
 
       {/* メモリボックス部分 */}
       <MemoryBox
@@ -241,14 +230,14 @@ const Step1 = () => {
         />
       )}
 
-      {/* ゲストログインボタンの表示: ログインしていない場合のみ */}
-      {!isLoading && !isLoggedIn && !isGuest && (
-        <button
-          onClick={handleGuestLogin}
-          className="mt-4 p-3 bg-blue-500 text-white rounded w-full max-w-md text-lg"
-        >
-          ゲストとしてログイン
-        </button>
+      {/* ログイン状態の表示 */}
+      {isGuest && (
+        <div className="mt-4 p-2 text-black rounded flex flex-col items-center">
+          <p>ゲストとしてログインしています</p>
+          <button onClick={handleLogout} className="mt-2 p-2 bg-red-500 text-black rounded">
+            ログアウト
+          </button>
+        </div>
       )}
     </div>
   );

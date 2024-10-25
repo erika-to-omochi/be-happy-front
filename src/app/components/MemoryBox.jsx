@@ -14,7 +14,7 @@ const MemoryBox = ({
   handleContinue,
 }) => {
   return (
-    <div className="relative flex justify-center w-full h-auto mb-1 mt-20">
+    <div className="relative flex justify-center w-full h-auto mb-1 mt-10">
       {!isSubmitted ? (
         <div className="max-w-[320px] object-cover rounded-lg shadow-lg flex justify-center items-center">
         </div>

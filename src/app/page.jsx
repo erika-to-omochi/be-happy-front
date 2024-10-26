@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#E8C5C0]">
       <h1 className="text-6xl lg:text-5xl md:text-5xl sm:text-4xl mb-16 mt-24">May you be happy</h1>
-      <p>編集、削除機能がまだ実装できていませんので、他の方に見られたくないことを投稿してしまった場合は、こちらで消せますのでえりかまで連絡ください。</p>
+      <p className="bg-white text-center text-gray-800 font-semibold p-4 my-4 rounded-lg shadow-lg max-w-lg">      編集、削除機能がまだ実装できていません。他の方に誰の投稿か内緒にしたい場合は、匿名での投稿をお願いします。削除したい場合は、こちらで消せますのでえりかまで連絡ください。</p>
       <div className="flex justify-center">
         <Image
           src="/6.png"

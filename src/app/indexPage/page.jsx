@@ -17,7 +17,7 @@ const IndexPage = () => {
     const token = localStorage.getItem('token') || localStorage.getItem('guestToken');
     if (!token) {
       console.error('トークンがありません。ログインが必要です。');
-      setError('ログインが必要です。');
+      setError('他の人の記憶は変換できません。');
       return;
     }
     try {
@@ -36,7 +36,7 @@ const IndexPage = () => {
       if (!response.ok) {
         const errorData = await response.json();
         if (response.status === 403) {
-          throw new Error('他の人の記憶は変換できません'); // サーバー側からのメッセージに変更
+          throw new Error('他の人の記憶は変換できません。'); // サーバー側からのメッセージに変更
         }
         throw new Error(errorData.error || '変換に失敗しました');
       }

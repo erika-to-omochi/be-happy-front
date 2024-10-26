@@ -4,17 +4,13 @@ import React, { useEffect, useState } from 'react';
 
 const MemoryInput = ({ memory, handleInputChange, handleSubmit, isLoggedOut }) => {
   const [name, setName] = useState('ゲスト');
+  const [error, setError] = useState('');
 
   // ログイン状態に応じて名前を設定
   useEffect(() => {
-    if (isLoggedOut) {
-      setName('ゲスト');
-      localStorage.removeItem('name');  // localStorage から名前を削除
-    } else {
-      const storedName = localStorage.getItem('name');
-      if (storedName) {
-        setName(storedName);
-      }
+    const storedName = localStorage.getItem('name');
+    if (storedName) {
+      setName(storedName);
     }
   }, [isLoggedOut]);
 
@@ -23,9 +19,15 @@ const MemoryInput = ({ memory, handleInputChange, handleSubmit, isLoggedOut }) =
     localStorage.setItem('name', e.target.value);  // 名前を localStorage に保存
   };
 
-  const handleFormSubmit = () => {
-    console.log("Name:", name);
-    handleSubmit({ memory, name: name });
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    if (!memory.trim()) {
+      setError('記憶を入力してください');
+      return;
+    }
+    setError('');
+    handleSubmit({ memory, name });
   };
 
   return (
@@ -50,6 +52,7 @@ const MemoryInput = ({ memory, handleInputChange, handleSubmit, isLoggedOut }) =
           placeholder="あなたが整理したい記憶を、ここに入力してください。"
           rows="6"
         />
+        {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
       </div>
 
       <div className="flex justify-center sm:mt-6">

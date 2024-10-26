@@ -37,8 +37,6 @@ function LoginPage() {
         const data = await response.json();
         const name = data.user.name;
 
-        console.log('name:', name); // デバッグ用
-
         if (token) {
           localStorage.setItem('token', token); // トークンをlocalStorageに保存
           localStorage.setItem('name', name);
@@ -51,7 +49,7 @@ function LoginPage() {
 
           // 1秒後にリダイレクト
           setTimeout(() => {
-            router.push('/'); // ログイン後のリダイレクト先
+            router.push('/box'); // ログイン後のリダイレクト先
           }, 1000);
         } else {
           setError('トークンが見つかりません');
@@ -87,7 +85,7 @@ function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
             required
-            autoComplete="name"
+            autoComplete="email"
           />
         </div>
         <div className="mb-4">

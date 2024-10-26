@@ -13,8 +13,6 @@ function AuthButton() {
     const checkLoginStatus = () => {
       const token = localStorage.getItem('token');
       const storedName = localStorage.getItem('name')
-      console.log('Token:', token); // トークンの確認
-      console.log('Name:', storedName);
       if (token && storedName) {
         setIsLoggedIn(true);
         setName(storedName);

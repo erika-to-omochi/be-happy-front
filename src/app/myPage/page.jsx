@@ -54,7 +54,6 @@ const MyMemoriesPage = () => {
 
       const data = await response.json();
       const transformedContent = data.content.transformedContent;
-      console.log('Transformed content:', transformedContent);
 
       setTransformedContents((prev) => ({
         ...prev,
@@ -74,7 +73,7 @@ const MyMemoriesPage = () => {
     const fetchMemories = async () => {
       const token = localStorage.getItem('token'); // ログインしているユーザーのトークンを取得
       if (!token) {
-        setError('マイページを見るには、ログインが必要です。');
+        setError('新規登録、ログイン後に自分の投稿した内容が見れます。');
         setLoading(false);
         return;
       }

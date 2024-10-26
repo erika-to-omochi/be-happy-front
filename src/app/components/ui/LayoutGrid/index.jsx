@@ -34,12 +34,12 @@ export const LayoutGrid = ({ cards, handleTransform, currentUser }) => { // curr
   const handleTransformClick = async (id, userId) => {
     setIsLoading(true);
     try {
-      const transformedContent = await handleTransform(id, userId); // userId を渡す
+      const transformedContent = await handleTransform(id, userId);
       if (transformedContent) {
         setSelectedMemory((prev) => ({
           ...prev,
           content: {
-            ...prev.content,
+            ...((prev && prev.content) || {}),
             transformedContent,
           },
         }));
@@ -50,7 +50,7 @@ export const LayoutGrid = ({ cards, handleTransform, currentUser }) => { // curr
               ? {
                   ...card,
                   content: {
-                    ...card.content,
+                    ...((card.content || {})),
                     transformedContent,
                   },
                 }

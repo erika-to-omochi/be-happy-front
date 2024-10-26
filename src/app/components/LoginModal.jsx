@@ -30,7 +30,7 @@ const LoginModal = ({ showModal, onClose, onGuestLogin }) => {
           </button>
           <button
             onClick={onClose}
-            className="w-[50%] bg-red-500 text-white p-2 rounded-lg font-bold"
+            className="w-[50%] bg-red-400 text-white p-2 rounded-lg font-bold"
           >
             キャンセル
           </button>

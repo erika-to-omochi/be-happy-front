@@ -18,6 +18,12 @@ export default function RootLayout({ children }) {
         <meta property="og:image" content="/OGP.png" />  {/* ローカルのOGP画像を参照 */}
         <meta property="og:url" content="https://be-happy-front.vercel.app/" />
         <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Be Happy♥" />
+        <meta name="twitter:description" content="嫌な経験をAIがポジティブに変換する癒しのアプリ" />
+        <meta name="twitter:image" content="https://yourwebsite.com/OGP.png" />
+
         <link
           href="https://fonts.googleapis.com/css2?family=Walter+Turncoat&family=Yomogi&display=swap"
           rel="stylesheet"

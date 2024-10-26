@@ -254,6 +254,9 @@ const Step1 = () => {
       <h1 className="w-full text-2xl sm:text-4xl font-bold text-center">
         記憶をしまう
       </h1>
+      <p className="bg-white text-center text-gray-800 font-semibold p-4 my-4 rounded-lg shadow-lg max-w-lg">
+      編集、削除機能がまだ実装できていません。他の方に見られたくない場合は匿名にできます。削除したい場合は、こちらで消せますのでえりかまで連絡ください。
+    </p>
 
       {/* モーダルの表示 */}
       <LoginModal
